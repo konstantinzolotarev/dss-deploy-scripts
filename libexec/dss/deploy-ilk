@@ -53,6 +53,7 @@ calcType=$(jq -r ".tokens.$1.ilks.$2.calc.type" $CONFIG_FILE)
 calc=$(dappCreate dss ${calcType})
 MCD_PAUSE_PROXY=$(seth call "$(seth call "$MCD_DEPLOY" "pause()(address)")" "proxy()(address)")
 sethSend "$calc" 'rely(address)' "$MCD_PAUSE_PROXY"
+sethSend "$calc" 'deny(address)' "$ETH_FROM"
 eval export "\MCD_CLIP_CALC_${ilkVar}=${calc}"
 
 sethSend "$MCD_DEPLOY" "deployCollateralClip(bytes32,address,address,address)" \

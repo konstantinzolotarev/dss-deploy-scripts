@@ -20,13 +20,16 @@
 
 { test -z "$1" || test -z "$3"; } && exit 1
 
+# Get config variables
+CONFIG_FILE="$OUT_DIR/config.json"
+
 tok=$1
 if [[ -n "$2" ]]; then
     ilk="${1}-${2}"
     ilkVar="${1}_${2}"
 else
-    ilk="${1}"
-    ilkVar="${1}"
+    echo "an ilk letter is required"
+    exit 1
 fi
 ilkJoin=$3 # adapter contract name
 decimals=$4
@@ -43,9 +46,20 @@ fi
 eval export "\MCD_JOIN_${ilkVar}=${contract}"
 log "MCD_JOIN_${ilkVar}=$(eval "echo ${contract}")"
 
-sethSend "$MCD_DEPLOY" "deployCollateral(bytes32,address,address)" "$(seth --to-bytes32 "$(seth --from-ascii "$ilk")")" "$(eval echo "\$MCD_JOIN_${ilkVar}")" "$(eval echo "\$PIP_${tok}")"
-while IFS=$'\n' read -r line; do data+=("$line"); done < <(seth call "$MCD_DEPLOY" "ilks(bytes32)(address,address)" "$(seth --to-bytes32 "$(seth --from-ascii "$ilk")")")
+sethSend "$MCD_DEPLOY" "deployCollateralFlip(bytes32,address,address)" "$(seth --to-bytes32 "$(seth --from-ascii "$ilk")")" "$(eval echo "\$MCD_JOIN_${ilkVar}")" "$(eval echo "\$PIP_${tok}")"
+
+calcType=$(jq -r ".tokens.{$1}.ilks.{$2}.calc.type" $CONFIG_FILE)
+calc=$(dappCreate dss ${calcType})
+eval export "\MCD_CLIP_CALC_${ilkVar}=${calc}"
+sethSend "$MCD_DEPLOY" "deployCollateralClip(bytes32,address,address,address)" \
+    "$(seth --to-bytes32 "$(seth --from-ascii "$ilk")")"                       \
+    "$(eval echo "\$MCD_JOIN_${ilkVar}")"                                      \
+    "$(eval echo "\$PIP_${tok}")"                                              \
+    "$(eval echo "\$MCD_CLIP_CALC_${ilkVar}")"
+
+while IFS=$'\n' read -r line; do data+=("$line"); done < <(seth call "$MCD_DEPLOY" "ilks(bytes32)(address,address,address)" "$(seth --to-bytes32 "$(seth --from-ascii "$ilk")")")
 eval export "\MCD_FLIP_${ilkVar}=${data[0]}"
+eval export "\MCD_CLIP_${ilkVar}=${data[1]}"
 
 cat > "$OUT_DIR/load-ilk-addr-temp" << EOF
 #!/bin/bash
@@ -53,4 +67,6 @@ export PIP_${tok}=$(eval echo "\$PIP_${tok}")
 export ${tok}=$(eval echo "\$${tok}")
 export MCD_JOIN_${ilkVar}=$(eval echo "\$MCD_JOIN_${ilkVar}")
 export MCD_FLIP_${ilkVar}=$(eval echo "\$MCD_FLIP_${ilkVar}")
+export MCD_CLIP_${ilkVar}=$(eval echo "\$MCD_CLIP_${ilkVar}")
+export MCD_CLIP_CALC_${ilkVar}=$(eval echo "\$MCD_CLIP_CALC_${ilkVar}")
 EOF

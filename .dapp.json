@@ -210,7 +210,7 @@
         "url": "https://github.com/makerdao/dss-deploy-pause-proxy-actions"
       }
     },
-    "dss-deploy_95c51de": {
+    "dss-deploy_3d84072": {
       "deps": {
         "ds-auth": "ds-auth_434bf46",
         "ds-pause": "ds-pause_2db7e84",
@@ -220,9 +220,9 @@
       },
       "name": "dss-deploy",
       "repo": {
-        "name": "dss-deploy-95c51de",
+        "name": "dss-deploy-3d84072",
         "ref": "liq-2.0",
-        "rev": "95c51de21592999c63b86aefb544b81ae054a5c2",
+        "rev": "3d84072767c5de297798722a1a5e20f358328b53",
         "url": "https://github.com/makerdao/dss-deploy"
       }
     },
@@ -474,7 +474,7 @@
       "ds-weth": "ds-weth_b5819d1",
       "dsr-manager": "dsr-manager_0547fd4",
       "dss-cdp-manager": "dss-cdp-manager_7937f0a",
-      "dss-deploy": "dss-deploy_95c51de",
+      "dss-deploy": "dss-deploy_3d84072",
       "dss-deploy-pause-proxy-actions": "dss-deploy-pause-proxy-actions_d9b848c",
       "dss-gem-joins": "dss-gem-joins_8ca0a7f",
       "dss-proxy-actions": "dss-proxy-actions_472c2f9",

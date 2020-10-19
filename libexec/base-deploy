@@ -383,6 +383,8 @@ EOF
 
 "$LIBEXEC_DIR"/setters/set-ilks-buf
 
+"$LIBEXEC_DIR"/setters/set-ilks-tail
+
 if [[ -f "$CASE" ]]; then
     "$CASE"
 fi

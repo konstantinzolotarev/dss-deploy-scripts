@@ -50,7 +50,6 @@
           "tau": "3600",
 	  "buf": "50",
 	  "tail": "10800",
-	  "tail": "10800",
 	  "calc": {
             "type": "LinearDecrease",
 	    "tau":  "3600"
@@ -67,7 +66,6 @@
           "ttl": "3600",
           "tau": "3600",
 	  "buf": "50",
-	  "tail": "10800",
 	  "tail": "10800",
 	  "calc": {
             "type": "LinearDecrease",
